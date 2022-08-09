@@ -19,6 +19,7 @@ RUN apt-get install -y --no-install-recommends git cmake ninja-build gperf \
 
 # Create user
 RUN useradd -rm -d /home/zduser -s /bin/bash -g root -G sudo -u 1001 zduser
+# Create bypass group uucp->dialout
 RUN groupadd -g 986 uucp_dk && addgroup zduser uucp_dk
 USER zduser
 WORKDIR /home/zduser
@@ -26,19 +27,20 @@ WORKDIR /home/zduser
 # Install west
 RUN pip3 install --user -U west
 ENV PATH="/home/zduser/.local/bin:${PATH}"
-# ENV ZEPHYR_BASE=$HOME/zephyrproject/zephyr
 
 # Get Zephyr
 RUN west init ~/zephyrproject && cd ~/zephyrproject && west update && west zephyr-export && pip3 install --user -r ~/zephyrproject/zephyr/scripts/requirements.txt
 
 RUN wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.14.2/zephyr-sdk-0.14.2_linux-x86_64.tar.gz && wget -O - https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.14.2/sha256.sum | shasum --check --ignore-missing && tar xvf zephyr-sdk-0.14.2_linux-x86_64.tar.gz
 
-#probar WORKDIR
-RUN cd zephyr-sdk-0.14.2 && ./setup.sh -t all -h -c
+WORKDIR /home/zduser/zephyr-sdk-0.14.2 
+RUN ./setup.sh -t all -h -c
 
-RUN cd $HOME/zephyrproject/zephyr && west update && west espressif install && west espressif update
+WORKDIR /home/zduser/zephyrproject/zephyr 
+RUN west update && west espressif install && west espressif update
 
-RUN mkdir /home/zduser/zephyrproject/zephyr/Projects
+# Folder mounted from our local machine
+WORKDIR /home/zduser/zephyrproject/zephyr/Projects
 
 VOLUME ["/home/zduser/zephyrproject/zephyr/Projects"]
 
