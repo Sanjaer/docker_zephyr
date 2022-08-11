@@ -16,7 +16,7 @@ if [[ $1 == "build" ]]; then
         exit -1
     fi
 elif [[ $1 == "root" ]]; then
-    docker run -v $(pwd)/Projects/:/home/zduser/zephyrproject/zephyr/Projects -itu root zephyr_build:latest
+    docker run -v $(pwd)/Projects/:/home/zduser/zephyrproject/zephyr/Projects -itu root zephyr_build_esp32:latest
 else
-    docker run --device=/dev/ttyUSB0 -v $(pwd)/Projects/:/home/zduser/zephyrproject/zephyr/Projects -it zephyr_build:latest
+    docker run --device=/dev/ttyUSB0 -v $(pwd)/Projects/:/home/zduser/zephyrproject/zephyr/Projects -it zephyr_build_esp32:latest
 fi
