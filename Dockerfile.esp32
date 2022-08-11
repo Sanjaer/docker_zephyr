@@ -1,0 +1,11 @@
+FROM zephyr_build:latest
+
+WORKDIR /home/zduser/zephyrproject/zephyr 
+RUN west update && west espressif install && west espressif update
+
+# Folder mounted from our local machine
+WORKDIR /home/zduser/zephyrproject/zephyr/Projects
+
+VOLUME ["/home/zduser/zephyrproject/zephyr/Projects"]
+
+CMD ["/bin/bash"]

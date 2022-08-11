@@ -35,13 +35,3 @@ RUN wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.14.2/
 
 WORKDIR /home/zduser/zephyr-sdk-0.14.2 
 RUN ./setup.sh -t all -h -c
-
-WORKDIR /home/zduser/zephyrproject/zephyr 
-RUN west update && west espressif install && west espressif update
-
-# Folder mounted from our local machine
-WORKDIR /home/zduser/zephyrproject/zephyr/Projects
-
-VOLUME ["/home/zduser/zephyrproject/zephyr/Projects"]
-
-CMD ["/bin/bash"]
